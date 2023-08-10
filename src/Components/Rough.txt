@@ -1,0 +1,146 @@
+import { withoutAuthAxios } from '@/config/config';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Unstable_Grid2';
+const TimeApp = () => {
+
+    const [file, setFile] = useState(null);
+    const [uploadedData, setUploadedData] = useState(null);
+    const [serchData, setsearchData] = useState("");
+
+    const [data, setdata] = useState('')
+
+    const handleFileChange = async(event) => {
+        const selectedFile = event.target.files[0]
+      
+        
+        const formData = new FormData();
+        formData.append('csvFile', selectedFile)
+        await withoutAuthAxios()
+        .post("/data/checkFile",formData)
+        .then((response)=>{
+          console.log(response)
+          if(response.data.exists==true){
+            toast.success(response.data.message)
+          }else{
+          //  const formData = new FormData();
+          //  formData.append('csvFile', selectedFile)
+             withoutAuthAxios()
+            .post("/data/upload",formData)
+            .then((response)=>{
+                     
+                toast.success(response.data.message)
+            }).catch((error)=>{
+                console.log(error)
+                toast.error(error.message)
+            })
+          }
+        }).catch((error)=>{
+            console.log(error)
+            toast.error(error.message)
+        })
+        
+ 
+         /*
+        const formData = new FormData();
+        formData.append('csvFile', selectedFile)
+        await withoutAuthAxios()
+        .post("/data/upload",formData)
+        .then((response)=>{
+             
+            console.log(response)
+            
+            toast.success(response.data.message)
+        }).catch((error)=>{
+            console.log(error)
+            toast.error(error.message)
+        })
+        */
+
+      };
+
+
+      
+  return (
+    
+<> 
+       {/*   <input type='file' accept=".csv"  onChange={handleFileChange}  />
+
+
+        <br/>
+        <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={2}>
+  <Grid xs={6} md={6}>
+    <>  <input  className='selectuser'  type='text'  placeholder='Select User'    />  </>
+  </Grid>
+
+  <Grid xs={6} md={2}>
+    <> <button className='lowhours' >Low Hours</button>  </>
+  </Grid>
+
+  <Grid xs={6} md={2}>
+    <> <button className='puncherror'  >Punch  Error</button>  </>
+  </Grid>
+  
+  <Grid xs={6} md={2}>
+    <><input className='chooseFile'  type='file' accept=".csv"  onChange={handleFileChange}  /></>
+  </Grid>
+
+
+  
+</Grid>
+    </Box>
+
+
+*/}
+
+
+
+
+
+
+<Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={4}>
+      <Grid xs={3}>
+      <>  <select className='selectuser'    >
+
+
+        <option value="">Select User</option>
+            
+         
+        </select>  </>
+     </Grid>
+  
+  
+  <Grid xs={3}>
+  <> <button className='lowhours' >Low Hours</button>  </>
+  </Grid>
+  
+  
+  <Grid xs={3}>
+  <> <button className='puncherror'  >Punch  Error</button>  </>
+  </Grid>
+
+
+  <Grid xs={3}>
+  <><input className='chooseFile'  type='file' accept=".csv"  onChange={handleFileChange}  /></>
+  </Grid>
+
+      </Grid>
+    </Box>
+
+
+
+       
+    
+    </> 
+
+    
+  )
+}
+
+export default TimeApp
